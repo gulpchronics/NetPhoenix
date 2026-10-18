@@ -1,5 +1,4 @@
 # NetPhoenix
-# NetPhoenix
 ## Report 1: Project Progress Report
 
 **Project Title:** NetPhoenix: An Automated Self-Healing Network for Fault Detection and Recovery
