@@ -2,374 +2,396 @@
 
 **Final-Year Major Project | B.Tech Computer Science and Engineering**
 
-NetPhoenix is a network automation project that aims to detect predefined network failures, identify affected paths, and verify or initiate recovery using Python-based automation. The project uses virtualized VyOS routers in EVE-NG, OSPF routing, SSH, Netmiko, and Wireshark to study network resilience and reduce the need for manual intervention.
+NetPhoenix is a group project focused on improving network reliability through redundancy, failure detection and network automation. The project uses virtualized VyOS routers in EVE-NG, OSPF routing and Python-based automation to monitor network conditions and identify link failures.
 
-The project is being developed as a team effort. The initial virtual network has been implemented, OSPF has been configured, and a manual link-failure experiment has been performed. The next stage is to integrate Python automation, test failure detection and recovery, and analyze routing behavior during failures.
+The network is designed with redundant paths so that communication can continue if one link becomes unavailable. Python and Netmiko are used to connect to the routers over SSH, collect OSPF information, monitor interface status and record detected failures.
 
-> **Current status:** Network topology, IP addressing, OSPF configuration, and initial manual failover testing completed. Python-based failure detection and automated recovery are still under development.
+The project is being developed and tested in a virtual environment using VMware Workstation Pro and EVE-NG. No physical networking hardware is required.
+
+> **Current progress:** Virtual network implementation, OSPF routing, SSH connectivity, Python-based monitoring, interface failure detection and failure logging have been implemented and tested. Automated recovery and Wireshark analysis are the next development stages.
 
 ---
 
 ## 1. Project Overview
 
-### Problem Statement
+In a computer network, a link failure can interrupt communication if there is no alternative path available. Network administrators usually need to identify the problem and take corrective action.
 
-Computer networks are expected to remain available even when individual links or devices fail. In a network without an alternative path, a link failure can interrupt communication until an administrator identifies and fixes the problem.
+NetPhoenix aims to reduce this manual effort by combining redundant network paths with Python-based monitoring and automation.
 
-Dynamic routing protocols such as OSPF can recalculate routes when the network topology changes. However, monitoring the network, identifying failures, collecting evidence, and performing additional recovery actions can still require administrative effort.
+The project currently uses two VyOS routers connected through two Ethernet links. OSPF is configured to provide dynamic routing between them. Python scripts using Netmiko connect to both routers, retrieve routing information and check the status of their interfaces.
 
-NetPhoenix aims to combine network redundancy with Python-based automation to make failure detection and recovery verification more systematic.
+The current implementation can detect a failed interface and generate an alert. OSPF handles routing changes, while Python records the failure. Python-controlled recovery is planned for the next stage.
 
-### Proposed Solution
-
-The project uses two virtual VyOS routers connected through redundant Ethernet links. OSPF is configured so that the routers can learn routes and respond to topology changes.
-
-A Python automation component using Netmiko is planned to communicate with the routers over SSH, monitor network health, detect predefined failures, and record the results. Where required, it will perform controlled recovery actions and verify connectivity afterward.
-
-Wireshark will be used to examine network traffic and OSPF behavior during failure and recovery experiments.
-
-### Main Objectives
+## 2. Project Objectives
 
 - Build a virtual network using EVE-NG and VyOS.
 - Configure IP addressing and OSPF routing.
-- Provide redundant paths between routers.
-- Simulate link failures and test connectivity through an alternate path.
-- Develop Python-based monitoring using Netmiko and SSH.
-- Detect predefined link or router-connectivity failures.
-- Verify recovery and record test results.
-- Analyze network traffic and OSPF convergence using Wireshark.
-- Document the implementation, troubleshooting, and experimental results.
+- Establish redundant links between routers.
+- Simulate network link failures.
+- Configure SSH access for remote router management.
+- Use Python and Netmiko to monitor network devices.
+- Automatically identify interfaces in UP or DOWN states.
+- Generate alerts and maintain failure logs.
+- Implement controlled automated recovery.
+- Analyse OSPF behaviour during failures using Wireshark.
 
-## 2. Project Architecture
-
-The proposed system has three main parts:
-
-1. **Network layer:** VyOS routers, Ethernet links, IP addressing, and OSPF provide routing and redundancy.
-2. **Automation layer:** Python and Netmiko will monitor the routers, detect predefined failures, and perform or verify appropriate recovery actions.
-3. **Analysis layer:** Wireshark will be used to examine traffic and routing behavior before, during, and after a failure.
-
-The current implementation focuses on the network layer. The automation and packet-analysis layers are planned for the next stages.
-
-### Proposed Workflow
-
-```text
-        Virtual Network in EVE-NG
-                    |
-          VyOS Routers and Links
-                    |
-             OSPF Routing
-                    |
-          Simulate Network Failure
-                    |
-          Python + Netmiko
-          (Planned automation)
-                    |
-          Detect and Record Failure
-                    |
-          Verify Alternate-Path
-               Connectivity
-                    |
-          Wireshark Analysis
-```
-
-The diagram describes the intended workflow, not a claim that the complete automation is already running. OSPF handles dynamic route calculation; the planned Python component will provide monitoring, failure detection, logging, and controlled recovery verification.
-
-## 3. Technologies and Tools
+## 3. Technologies Used
 
 | Technology | Purpose |
 |---|---|
-| EVE-NG Community Edition | Creating and running the virtual network topology |
+| EVE-NG Community Edition | Virtual network topology and lab environment |
 | VMware Workstation Pro | Running the EVE-NG virtual machine |
-| VyOS | Virtual routers, interface configuration, and routing |
-| IPv4 and subnetting | Configuring IP addresses and point-to-point link subnets |
-| OSPF | Dynamic routing and alternate-path selection |
-| Linux command line | Lab administration and network troubleshooting |
-| SSH / OpenSSH | Secure remote access to the routers |
-| Python 3 | Planned monitoring and automation logic |
-| Netmiko | Planned Python-based router management over SSH |
-| Wireshark | Planned packet capture and OSPF convergence analysis |
-| Git / GitHub | Source control, screenshots, and project documentation |
+| VyOS | Router configuration and routing |
+| IPv4 and subnetting | Interface addressing |
+| OSPF | Dynamic routing and redundant paths |
+| SSH / OpenSSH | Remote router access |
+| Python 3 | Monitoring and automation scripts |
+| Netmiko | Connecting to and managing VyOS routers through SSH |
+| Wireshark | Planned packet capture and OSPF analysis |
+| Windows Command Prompt | Running Python scripts and SSH commands |
+| Git and GitHub | Version control and project documentation |
 
-No physical routers or switches are required for the current design. The lab runs on virtualized infrastructure.
+## 4. Network Topology
 
-## 4. Hardware and Software Requirements
+The current lab contains two VyOS routers, R1 and R2, connected through two independent Ethernet links.
 
-### Hardware
+![NetPhoenix Network Topology](screenshots/net-topology.png)
 
-- Laptop or PC with hardware virtualization support.
-- Minimum 8 GB RAM.
-- At least 60 GB of free storage recommended.
-- Sufficient CPU resources to run VMware and EVE-NG.
+*Figure 1: Virtual network topology created in EVE-NG.*
 
-### Software
+### IP Addressing
 
-- VMware Workstation Pro.
-- EVE-NG Community Edition.
-- VyOS virtual router images.
-- Ubuntu Server for the planned automation environment.
-- Python 3 and Netmiko.
-- OpenSSH.
-- Wireshark.
-- Git and a GitHub account.
+| Router | Interface | IP Address |
+|---|---|---|
+| R1 | eth0 | 10.0.12.1/30 |
+| R2 | eth0 | 10.0.12.2/30 |
+| R1 | eth1 | 10.0.13.1/30 |
+| R2 | eth1 | 10.0.13.2/30 |
 
-The exact resource requirements may increase as additional virtual machines and monitoring components are added.
+The two links use separate `/30` subnets.
 
-## 5. Network Implementation
+### Management Network
 
-### 5.1 Virtual Topology
+A separate management network using EVE-NG Cloud0 was added to provide access to the routers from Windows.
 
-The current EVE-NG lab contains two VyOS routers, R1 and R2, connected through two independent Ethernet links.
+| Router | Management Interface | IP Address |
+|---|---|---|
+| R1 | eth2 | 192.168.135.200 |
+| R2 | eth2 | 192.168.135.201 |
 
-![NetPhoenix virtual network topology](screenshots/net-topology.png)
+SSH was enabled on both routers, and remote login was successfully tested from Windows.
 
-*Figure 1: NetPhoenix topology implemented in EVE-NG.*
+## 5. OSPF Configuration and Connectivity Testing
 
-The two links provide an alternate connection between the routers. If one link is disabled, the remaining link can still provide connectivity, provided its interfaces and routing are operational.
+OSPF was configured on both routers in Area 0 using the two connected link subnets.
 
-### 5.2 IP Addressing
+The following network statements were used:
 
-The following addressing scheme has been configured on the router links.
-
-| Router | Interface | IP address | Connected subnet |
-|---|---|---|---|
-| R1 | eth0 | `10.0.12.1/30` | `10.0.12.0/30` |
-| R2 | eth0 | `10.0.12.2/30` | `10.0.12.0/30` |
-| R1 | eth1 | `10.0.13.1/30` | `10.0.13.0/30` |
-| R2 | eth1 | `10.0.13.2/30` | `10.0.13.0/30` |
-
-Each `/30` subnet provides two usable IPv4 addresses, one for each router interface.
-
-### 5.3 OSPF Configuration
-
-OSPF has been configured on both routers in Area 0. The two link subnets are included in the OSPF configuration.
-
-The following commands were used as part of the configuration and verification process:
-
-```text
+```bash
 set protocols ospf area 0 network 10.0.12.0/30
 set protocols ospf area 0 network 10.0.13.0/30
+```
 
-commit
-save
+Configuration was committed and saved. OSPF neighbor information was checked using:
 
+```bash
 run show ip ospf neighbor
 ```
 
-The neighbor command was used to inspect OSPF neighbor status. Neighbor states depend on the interface and network configuration; the screenshots provide evidence of the observed state during testing.
+![OSPF Neighbors Before Failover](screenshots/progress-report-1/ospf-neighbors-before-failover.png)
 
-![OSPF neighbors before failover](screenshots/ospf-neighbors-before-failover.png)
+*Figure 2: OSPF neighbor information before the failure experiment.*
 
-*Figure 2: OSPF neighbor status before the failure experiment.*
+Ping tests were also performed to verify communication between the routers.
 
-### 5.4 Initial Connectivity Test
+![Ping Before Failover](screenshots/progress-report-1/ping-before-failover.png)
 
-Ping tests were performed to verify connectivity between the routers and check that the configured links were working.
+*Figure 3: Initial connectivity test.*
 
-![Ping before failover](screenshots/ping-before-failover.png)
+## 6. SSH Configuration and Remote Access
 
-*Figure 3: Connectivity test before the link-failure experiment.*
+SSH was enabled on both VyOS routers to allow remote management.
 
-Successful ping replies confirmed that communication was possible before the failure was introduced.
+The SSH service was configured using:
 
-### 5.5 Manual Link-Failure Experiment
+```bash
+set service ssh port 22
+commit
+save
+```
 
-The first link on R1 was disabled to simulate a network failure. Connectivity was then tested through the alternate link.
+Connectivity was tested from Windows Command Prompt using:
 
-The test procedure was:
+```cmd
+ssh vyos@192.168.135.200
+ssh vyos@192.168.135.201
+```
 
-1. Verify the initial router connectivity.
-2. Disable R1's `eth0` interface.
-3. Test connectivity using the remaining link.
-4. Observe the connectivity results.
-5. Restore the original interface after the experiment.
+Both routers accepted SSH connections successfully.
 
-The manual test demonstrated that ping replies could be received through the alternate path while the original link was disabled.
+![SSH Connectivity](screenshots/progress-report-2/ssh-connectivity-r1-r2.jpeg)
 
-![Ping during failover](screenshots/ping-during-failover.png)
+*Figure 4: Successful SSH login to R1 and R2 from Windows.*
 
-*Figure 4: Ping test performed during the manual failover experiment.*
+## 7. Python and Netmiko Implementation
 
-The original interface was subsequently restored, and OSPF neighbor status was checked again.
+After establishing SSH access, Python and Netmiko were used to communicate with the routers.
 
-![OSPF neighbors after failover](screenshots/ospf-neighbors-after-failover.png)
+Netmiko allows the Python scripts to establish SSH sessions and execute commands on the VyOS devices.
 
-*Figure 5: OSPF neighbor status captured after the failure test.*
+Two scripts have been developed so far.
 
-This experiment validates the initial redundant-network setup. It does not yet demonstrate automated failure detection or Python-controlled recovery.
+### 7.1 Router Monitoring Script
 
-## 6. Troubleshooting and Issues Encountered
+File: `scripts/monitor.py`
 
-Several issues were encountered while configuring the lab. Troubleshooting involved checking interface addresses, routing configuration, OSPF status, connectivity, and the EVE-NG management network.
+The first script connects to both routers and retrieves their OSPF neighbor information.
 
-### 6.1 OSPF Neighbor Formation
+The script:
 
-**Issue:** OSPF neighbor relationships and their states needed to be checked during the initial setup.
+- Establishes SSH connections to R1 and R2.
+- Uses Netmiko to execute router commands.
+- Retrieves OSPF neighbor information.
+- Displays the output in Windows Command Prompt.
+- Disconnects after collecting the information.
 
-**Troubleshooting performed:**
-- Checked the IP addresses on both router links.
-- Verified the OSPF network statements.
-- Inspected router IDs and neighbor status.
+![Netmiko Both Routers](screenshots/progress-report-2/netmiko-both-routers.jpeg)
+
+*Figure 5: Python successfully connecting to both routers and retrieving OSPF neighbor information.*
+
+### 7.2 Interface Failure Detection Script
+
+File: `scripts/failure_detection.py`
+
+The second script monitors the Ethernet interfaces on both routers.
+
+The monitored interfaces are:
+
+- R1: eth0 and eth1
+- R2: eth0 and eth1
+
+The script connects to each router using Netmiko, retrieves interface information and checks whether the interface state is UP or DOWN.
+
+If an interface is detected as DOWN, an alert is displayed.
+
+The script also records monitoring results and detected failures in `failure_log.txt`.
+
+**Normal monitoring result:**
+
+All four interfaces were detected as UP during normal operation.
+
+![Normal Interface Monitoring](screenshots/progress-report-2/normal-interface-monitoring.jpeg)
+
+*Figure 6: Python interface monitoring when both network links are operational.*
+
+**Failure detection result:**
+
+During the failure experiment, R1's eth0 interface was disabled manually.
+
+The Python script detected the interface as DOWN and generated an alert. The remaining interfaces continued to show UP.
+
+![Python Failure Detection](screenshots/progress-report-2/python-failure-detection.jpeg)
+
+*Figure 7: Python detecting the failed R1 eth0 interface and generating an alert.*
+
+### 7.3 Failure Logging
+
+The monitoring script saves results in:
+
+```text
+failure_log.txt
+```
+
+The log records interface status and detected failure messages.
+
+This provides a record of the monitoring and testing process.
+
+## 8. Manual Failure and Alternate-Path Testing
+
+A link-failure experiment was performed to check whether communication could continue when one of the two links was disabled.
+
+The test was carried out as follows:
+
+1. Verified that both links were operational.
+2. Disabled R1's eth0 interface.
+3. Ran the Python failure detection script.
+4. Confirmed that R1 eth0 was detected as DOWN.
+5. Checked that R1 eth1 and both R2 interfaces remained UP.
+6. Tested connectivity through the alternate link.
+7. Restored the original interface.
+
+The alternate-path connectivity test was performed from R2 using:
+
+```bash
+run ping 10.0.13.1
+```
+
+The test produced the following result:
+
+- Packets transmitted: 9
+- Packets received: 9
+- Packet loss: 0%
+
+![Alternate Path Ping](screenshots/progress-report-2/alternate-path-ping.jpeg)
+
+*Figure 8: Successful ping through the alternate link while R1 eth0 was disabled.*
+
+The original interface was subsequently restored, and all four interfaces were checked again.
+
+**Note:** The failure was introduced manually. Python detected and logged the failure, while OSPF handled routing over the available path. Python-controlled recovery has not yet been implemented.
+
+## 9. Troubleshooting and Issues Faced
+
+Several configuration and connectivity issues were encountered during development.
+
+### 9.1 OSPF Neighbor and Routing Issues
+
+During initial configuration, OSPF neighbor formation and routing status required troubleshooting.
+
+The following checks were performed:
+
+- Verified interface IP addresses.
+- Checked OSPF network statements.
+- Inspected router IDs and neighbor information.
 - Rechecked connectivity after configuration changes.
 
-**Learning:** OSPF configuration, interface addressing, and neighbor state must be verified before relying on dynamic routing behavior.
+### 9.2 Interface and Connectivity Testing
 
-### 6.2 Router Connectivity
+Ping tests were initially used to verify communication between the routers.
 
-**Issue:** Connectivity needed to be verified before and during the failure experiment.
+During the failure experiment, the original link was disabled and the alternate path was tested separately. This helped confirm that the remaining link could carry traffic.
 
-**Troubleshooting performed:**
-- Used ping tests to check the router links.
-- Checked the IP configuration on the interfaces.
-- Tested the alternate link while the first link was disabled.
-- Restored the original interface and checked connectivity again.
+### 9.3 EVE-NG Console Access
 
-**Learning:** Testing before, during, and after a failure helps distinguish a working redundant path from a configuration that only works under normal conditions.
+The router consoles initially required additional Windows console-client configuration. The EVE-NG console client was installed and configured to access the VyOS terminals.
 
-### 6.3 VyOS Command Modes
+### 9.4 Management Network Connectivity
 
-**Issue:** Some commands returned errors when entered in the wrong command mode.
+The Cloud0 management connection initially caused problems.
 
-**Troubleshooting performed:**
-- Used configuration mode for interface and OSPF changes.
-- Used operational commands to inspect interface status and routing neighbors.
-- Used Linux utilities such as `tcpdump` where supported by the VyOS environment.
+Troubleshooting included:
 
-**Learning:** VyOS configuration commands and operational commands have different purposes and syntax.
+- Checking the EVE-NG `pnet0` bridge.
+- Inspecting the bridge's connected interfaces.
+- Checking router interface addresses.
+- Inspecting the ARP table from Windows.
+- Capturing ARP requests using `tcpdump`.
+- Checking connectivity between Windows and the router management interfaces.
 
-### 6.4 EVE-NG Console Access
+After configuring the management addresses and checking the network connection, Windows was able to ping both routers and establish SSH sessions.
 
-**Issue:** Accessing the VyOS console from Windows required the EVE-NG console client to be configured correctly.
+### 9.5 Netmiko Connection Error
 
-**Troubleshooting performed:** Installed and used the Windows console client so the router terminals could be opened from the EVE-NG topology.
+The first Python monitoring script produced an error because an unsupported `name` parameter was passed to Netmiko.
 
-### 6.5 Management Network and SSH Connectivity
+The router information was separated from the connection parameters, and the script was corrected.
 
-**Issue:** The separate management interface is configured on R1, but Windows cannot yet reliably reach the router through the EVE-NG Cloud0 connection.
+After the change, Python successfully connected to both routers and retrieved OSPF neighbor information.
 
-**Checks performed:**
-- Configured R1 `eth2` with `192.168.135.200/25`.
-- Confirmed that the interface is UP and has the configured IPv4 address.
-- Checked the routing table and confirmed a connected route for the management subnet.
-- Checked the EVE-NG `pnet0` bridge and its learned MAC addresses.
-- Captured ARP traffic on R1 using `tcpdump`.
+### 9.6 Interface Status Detection
 
-**Current result:** Windows can reach the EVE-NG management address, but the ping to R1's management address times out. The captured traffic showed a request asking for R1's IP address without a corresponding reply in that capture.
+The initial failure detection script returned UNKNOWN for all interfaces because its output parsing did not correctly recognise the VyOS interface response.
 
-**Status:** Unresolved. The management connection needs further investigation before Python/Netmiko can be tested from Windows. The working OSPF links have been kept separate from this troubleshooting.
+The script was updated to search the complete command output for the interface state.
 
-### 6.6 Current Troubleshooting Summary
+After this correction, it successfully identified all four interfaces as UP and detected R1 eth0 as DOWN during the failure experiment.
 
-| Area | Status |
+## 10. Current Implementation Status
+
+| Component | Status |
 |---|---|
-| EVE-NG lab and VyOS routers | Completed |
-| Router interface addressing | Completed for the two OSPF links |
-| OSPF configuration | Implemented and checked |
-| Manual link-failure experiment | Performed |
-| Alternate-path connectivity test | Successful during the recorded experiment |
-| Windows-to-R1 management connectivity | Unresolved |
-| SSH/Netmiko automation | Pending end-to-end testing |
-| Wireshark convergence analysis | Pending |
+| EVE-NG virtual lab | Completed |
+| Two VyOS routers | Completed |
+| Redundant Ethernet links | Completed |
+| IPv4 addressing | Completed |
+| OSPF Area 0 configuration | Completed |
+| SSH access to both routers | Completed |
+| Python and Netmiko setup | Completed |
+| Automated OSPF information collection | Completed |
+| Four-interface monitoring | Completed |
+| UP/DOWN failure detection | Completed |
+| Failure alerts | Completed |
+| Failure event logging | Completed |
+| Manual failure simulation | Tested |
+| Alternate-path connectivity | Tested successfully |
+| Continuous background monitoring | Pending |
+| Python-controlled automated recovery | Pending |
+| Wireshark packet analysis | Pending |
+| Recovery and performance evaluation | Pending |
 
-## 7. Results Achieved So Far
+## 11. Work Planned
 
-The initial network implementation has produced the following results:
+The next stage of development will focus on completing the self-healing functionality.
 
-- Created a virtual topology with two VyOS routers.
-- Configured two independent Ethernet links.
-- Assigned IPv4 addresses to both links.
-- Configured OSPF in Area 0.
-- Inspected OSPF neighbor status.
-- Verified initial router connectivity using ping.
-- Disabled one link to simulate a failure.
-- Verified connectivity through the alternate link during the manual experiment.
-- Restored the original link and checked OSPF status afterward.
-- Identified a separate management-connectivity issue that must be resolved before testing the automation component.
+### Automated Recovery
 
-These results provide a foundation for the planned Python-based monitoring and recovery workflow.
+- Develop continuous Python-based monitoring.
+- Improve failure detection with repeated checks.
+- Identify the affected router and interface.
+- Implement controlled recovery actions through Netmiko.
+- Verify connectivity after recovery.
+- Record recovery events and results.
 
-## 8. Work Remaining
+### Wireshark Analysis
 
-The remaining work focuses on completing and validating the automation and analysis components.
+- Capture normal OSPF traffic.
+- Capture traffic during a link failure.
+- Observe OSPF convergence.
+- Capture traffic after link restoration.
+- Compare packet behaviour during the experiments.
 
-### Phase 1: Management Access
+### Further Testing
 
-- Resolve Cloud0 and management-network connectivity.
-- Verify SSH access to both VyOS routers.
-- Confirm that the automation environment can communicate with the routers reliably.
+- Repeat link-failure experiments.
+- Check the reliability of detection and recovery.
+- Measure recovery time and packet loss.
+- Document limitations and final observations.
 
-### Phase 2: Python and Netmiko
-
-- Develop a Python script that connects to the routers using Netmiko.
-- Read interface and routing status.
-- Monitor predefined connectivity or interface conditions.
-- Detect a simulated failure.
-- Log the event and its timestamp.
-- Verify whether OSPF restores connectivity through the alternate path.
-- Implement controlled recovery actions where required and test them safely.
-
-### Phase 3: Packet Analysis
-
-- Capture traffic during normal operation.
-- Capture traffic while a link is disabled.
-- Observe OSPF messages and routing changes.
-- Compare behavior before, during, and after failure.
-- Document the observations using Wireshark screenshots.
-
-### Phase 4: Testing and Documentation
-
-- Repeat the failure experiment to check consistency.
-- Record detection and recovery results.
-- Document any limitations and troubleshooting steps.
-- Update the GitHub repository with scripts, test evidence, and final results.
-- Prepare the final project report and demonstration.
-
-## 9. Completion Timeline
-
-The original project plan is organized over eight weeks.
-
-| Timeline | Planned work |
-|---|---|
-| Weeks 1–2 | EVE-NG, VyOS, topology creation, and OSPF configuration |
-| Weeks 3–4 | Ubuntu, SSH, Python, and Netmiko setup |
-| Weeks 5–6 | Network failure detection, automated recovery, and connectivity verification |
-| Weeks 7–8 | Failure testing, Wireshark analysis, performance evaluation, documentation, and final demonstration |
-
-The first stage has established the virtual network and initial manual failover test. The remaining stages will be completed and validated as development continues.
-
-## 10. Intended Users and Applications
-
-The project is intended as a learning and demonstration system for:
-
-- Network administrators.
-- Network Operations Center (NOC) teams.
-- IT infrastructure and network automation teams.
-- Students learning dynamic routing, fault detection, and network resilience.
-- Lab environments used to study network failures and recovery behavior.
-
-The implementation is a virtual lab and is not yet a production-ready network-management system.
-
-## 11. Repository Structure
+## 12. Repository Structure
 
 ```text
 NetPhoenix/
+│
 ├── README.md
+│
+├── scripts/
+│   ├── monitor.py
+│   └── failure_detection.py
+│
+├── docs/
+│   └── NetPhoenix_Progress1.pdf
+│
 └── screenshots/
-    ├── README.md
+    │
     ├── net-topology.png
-    ├── ospf-neighbors-before-failover.png
-    ├── ospf-neighbors-after-failover.png
-    ├── ping-before-failover.png
-    └── ping-during-failover.png
+    │
+    ├── progress-report-1/
+    │   ├── ospf-neighbors-before-failover.png
+    │   ├── ospf-neighbors-after-failover.png
+    │   ├── ping-before-failover.png
+    │   └── ping-during-failover.png
+    │
+    └── progress-report-2/
+        ├── netmiko-both-routers.jpeg
+        ├── normal-interface-monitoring.jpeg
+        ├── python-failure-detection.jpeg
+        ├── alternate-path-ping.jpeg
+        └── ssh-connectivity-r1-r2.jpeg
 ```
 
-The `screenshots/` directory contains the current visual evidence from the topology, OSPF checks, and connectivity experiments. Python scripts and additional documentation can be added as those components are implemented.
+## 13. Conclusion
 
-## 12. Conclusion
+The initial implementation of NetPhoenix has established a working virtual network with two VyOS routers, redundant links and OSPF routing.
 
-NetPhoenix is a final-year major project that combines virtual networking, dynamic routing, and planned automation to study network resilience. The initial implementation has established two VyOS routers with redundant links, configured OSPF, and demonstrated connectivity through an alternate link during a manual failure experiment.
+SSH connectivity and Python-based router monitoring have also been implemented. Using Netmiko, the scripts can connect to both routers, retrieve OSPF information and monitor interface status. A manual link-failure experiment confirmed that the Python script could detect and log the failed interface while connectivity continued through the alternate link.
 
-The next stage is to establish reliable management access, develop Python-based monitoring using Netmiko, and analyze OSPF behavior with Wireshark. These tasks will help turn the current network lab into a tested prototype for automated failure detection and recovery verification.
+The project is now moving towards continuous monitoring and Python-controlled automated recovery. Wireshark will also be used in the next stage to study network traffic and OSPF behaviour during failure and recovery experiments.
 
-**Project domain:** Computer Networks and Network Automation  
-**Project type:** Final-Year Major Project  
-**Current stage:** Initial network implementation completed; automation and packet analysis in progress.
+---
+
+**Project:** NetPhoenix – An Automated Self-Healing Network for Fault Detection and Recovery  
+**Project Type:** Final-Year Major Project (Group Project)  
+**Domain:** Computer Networks and Network Automation  
+**Repository:** [GitHub – NetPhoenix](https://github.com/gulpchronics/NetPhoenix)
+
+*This repository will be updated as implementation, testing and documentation continue.*
