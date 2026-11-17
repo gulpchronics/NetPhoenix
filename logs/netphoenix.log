@@ -1,0 +1,10 @@
+2026-11-17 16:54:48,368 - INFO - ========== NetPhoenix Started ==========
+2026-11-17 16:54:48,371 - INFO - Checking R1 (192.168.135.200)
+2026-11-17 16:54:48,452 - INFO - Connected (version 2.0, client OpenSSH_9.2p1)
+2026-11-17 16:54:49,485 - INFO - Authentication (password) successful!
+2026-11-17 16:54:53,220 - INFO - R1: eth0 is UP. No recovery needed
+2026-11-17 16:54:55,513 - INFO - Checking R2 (192.168.135.201)
+2026-11-17 16:54:55,584 - INFO - Connected (version 2.0, client OpenSSH_9.2p1)
+2026-11-17 16:54:56,348 - INFO - Authentication (password) successful!
+2026-11-17 16:54:59,846 - INFO - R2: eth0 is UP. No recovery needed
+2026-11-17 16:55:02,050 - INFO - ========== NetPhoenix Finished ==========
